@@ -29,34 +29,46 @@ export default function SignUp() {
   const { setuserDetail } = useContext(UserDetailContext);
 
   const handleSignUp = async () => {
-    if (!(fullName && email && password)) {
-      ToastAndroid.show("Please fill all the fields", ToastAndroid.BOTTOM);
-      Alert.alert("Please fill all the fields");
-      return;
-    }
-    setloading(true);
-    createUserWithEmailAndPassword(auth, email, password).then(
-      async (resp) => {
-        const user = resp.user;
-        ToastAndroid.show("User Created Successfully", ToastAndroid.BOTTOM);
-        await setDoc(doc(db, "users", email), {
-          name: fullName,
-          email: email,
-          member: false,
-          uid: user?.uid
-        })
-        setuserDetail({ name: fullName, email: email, member: false, uid: user?.uid });
-        router.replace("/(tabs)/Home");
-        setloading(false);
-      }
-    ).catch((error) => {
-      if (error.code === "auth/email-already-in-use") {
-        ToastAndroid.show("Email already in use", ToastAndroid.BOTTOM);
-        Alert.alert("Email already in use");
-      }
-      setloading(false);
+  if (!(fullName && email && password)) {
+    ToastAndroid.show("Please fill all the fields", ToastAndroid.BOTTOM);
+    Alert.alert("Please fill all the fields");
+    return;
+  }
+
+  setloading(true);
+
+  try {
+    // Create user in Firebase Authentication
+    const resp = await createUserWithEmailAndPassword(auth, email, password);
+    const user = resp.user;
+
+    // Save user data to Firestore
+    await setDoc(doc(db, "users", email), {
+      name: fullName,
+      email: email,
+      member: false,
+      uid: user?.uid,
     });
-  };
+
+    // Show success message and update user context
+    ToastAndroid.show("User Created Successfully", ToastAndroid.BOTTOM);
+    setuserDetail({ name: fullName, email: email, member: false, uid: user?.uid });
+
+    // Navigate to the home screen
+    router.replace("/(tabs)/Home");
+  } catch (error) {
+    console.error("Error during sign-up:", error);
+
+    if (error.code === "auth/email-already-in-use") {
+      ToastAndroid.show("Email already in use", ToastAndroid.BOTTOM);
+      Alert.alert("Email already in use");
+    } else {
+      Alert.alert("Error", "An error occurred during sign-up. Please try again.");
+    }
+  } finally {
+    setloading(false);
+  }
+};
   return (
     <View style={styles.container}>
       <Image

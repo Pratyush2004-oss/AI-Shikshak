@@ -28,34 +28,59 @@ export default function SignIn() {
   const [showPassword, setshowPassword] = useState(false);
   const { setuserDetail } = useContext(UserDetailContext);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!(email && password)) {
       ToastAndroid.show("Please fill all the fields", ToastAndroid.BOTTOM);
       Alert.alert("Please fill all the fields");
       return;
     }
+
     setloading(true);
-    signInWithEmailAndPassword(auth, email, password).
-      then(async (resp) => {
-        const user = resp.user;
+
+    try {
+      // Sign in the user with Firebase Authentication
+      const resp = await signInWithEmailAndPassword(auth, email, password);
+      const user = resp.user;
+
+      // Fetch user data from Firestore
+      const docRef = doc(db, "users", email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        // User data exists in Firestore
         ToastAndroid.show("User Logged In Successfully", ToastAndroid.BOTTOM);
-        const docRef = doc(db, "users", email);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const result = docSnap.data();
-          console.log(result)
-          await setuserDetail(result);
-          router.replace("/(tabs)/Home");
-          setloading(false);
-        }
-      }).catch((error) => {
-        console.log(error)
-        if (error.code === "auth/invalid-credential") {
-          ToastAndroid.show("Invalid Credentials", ToastAndroid.BOTTOM);
-          Alert.alert("Invalid Credentials");
-        }
-        setloading(false);
-      })
+        const result = docSnap.data();
+        console.log("User Data:", result);
+
+        // Update user context
+        await setuserDetail(result);
+
+        // Navigate to the home screen
+        router.replace("/(tabs)/Home");
+      } else {
+        // User data does not exist in Firestore
+        ToastAndroid.show("User Not Found in Firestore", ToastAndroid.BOTTOM);
+        Alert.alert("Error", "User data not found in Firestore.");
+      }
+    } catch (error) {
+      // Handle specific Firebase Authentication errors
+      if (error.code === "auth/user-not-found") {
+        ToastAndroid.show("User not found", ToastAndroid.BOTTOM);
+        Alert.alert("Error", "User not found. Please check your credentials.");
+      } else if (error.code === "auth/wrong-password") {
+        ToastAndroid.show("Invalid Credentials", ToastAndroid.BOTTOM);
+        Alert.alert("Error", "Invalid credentials. Please try again.");
+      }
+      else if (error.code === "auth/invalid-credential") {
+        ToastAndroid.show("Invalid Credentials", ToastAndroid.BOTTOM);
+        Alert.alert("Invalid Credentials");
+      }
+      else {
+        Alert.alert("Error", "An error occurred during login. Please try again.");
+      }
+    } finally {
+      setloading(false);
+    }
   };
 
   // const getUserDetail = async () => {

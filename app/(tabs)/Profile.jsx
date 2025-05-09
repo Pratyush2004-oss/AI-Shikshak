@@ -43,7 +43,8 @@ export default function Profile() {
 
       <FlatList
         style={styles.list}
-        contentContainerStyle={{ marginTop: "auto" }} // Ad
+        contentContainerStyle={{ marginTop: "auto" }} // Adding margin to the top
+        showsVerticalScrollIndicator={false}
         data={ProfileMenu}
         renderItem={({ item, index }) => (
           <TouchableOpacity key={index} style={styles.itemContainer} onPress={() => onButtonPress(item)}>

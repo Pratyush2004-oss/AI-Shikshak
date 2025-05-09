@@ -57,8 +57,6 @@ export default function Index() {
 
       const notificationTimes = [
         { hour: 10, minute: 0 }, // 10:00 AM
-        { hour: 15, minute: 0 }, // 3:00 PM
-        { hour: 19, minute: 0 }, // 7:00 PM
       ];
 
       for (const time of notificationTimes) {
