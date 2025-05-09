@@ -8,7 +8,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "permissions": ["AUDIO_RECORDING"],
+    "permissions": [
+      "AUDIO_RECORDING"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -24,7 +26,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.pratyush_075.AIShikshak"
     },
     "web": {
       "bundler": "metro",
@@ -45,7 +48,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./local/assets/splash-icon.png",
+          "icon": "./assets/images/splash-icon.png",
           "color": "#ffffff",
           "defaultChannel": "default",
           "sound": "default",
@@ -59,6 +62,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "4a62d55c-16e4-443d-810b-445ba12f97fd"
       }
     }
   }

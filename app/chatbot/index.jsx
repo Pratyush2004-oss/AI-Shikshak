@@ -1,12 +1,12 @@
-import {EXPO_OPENAPI_KEY} from '@env';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image, Animated, KeyboardAvoidingView, Alert, ActivityIndicator, Pressable, Keyboard } from 'react-native'
-import React, { useState, useRef, useEffect, memo } from 'react'
-import { Ionicons } from '@expo/vector-icons'
-import { chatbot } from '../../configs/AIModel';
-import { Colors } from '../../constant/Colors';
+import { EXPO_OPENAPI_KEY } from '@env';
+import { Ionicons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
 import { usePathname, useRouter } from 'expo-router';
 import * as Speech from 'expo-speech';
-import { Audio } from 'expo-av';
+import { memo, useEffect, useRef, useState } from 'react';
+import { Alert, Animated, FlatList, Image, Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { chatbot } from '../../configs/AIModel';
+import { Colors } from '../../constant/Colors';
 
 export default function Chatbot() {
     const [messages, setMessages] = useState([]);
@@ -157,7 +157,7 @@ export default function Chatbot() {
         return (
             <View style={styles.emptyState}>
                 <Image
-                    source={require('../../assets/images/robot.png')} // Update the path to your image
+                    source={require('../../assets/images/robot.jpg')} // Update the path to your image
                     style={styles.emptyStateImage}
                 />
                 <Text style={styles.emptyStateText}>Hello, How can I help you...</Text>
@@ -166,70 +166,70 @@ export default function Chatbot() {
     }
 
     // voice commands
-    const startRecording = async () => {
-        try {
-            Audio.requestPermissionsAsync();
-            await Audio.setAudioModeAsync({
-                allowsRecordingIOS: true,
-                playsInSilentModeIOS: true,
-            });
+    // const startRecording = async () => {
+    //     try {
+    //         Audio.requestPermissionsAsync();
+    //         await Audio.setAudioModeAsync({
+    //             allowsRecordingIOS: true,
+    //             playsInSilentModeIOS: true,
+    //         });
 
-            const { recording } = await Audio.Recording.createAsync(
-                Audio.RecordingOptionsPresets.HIGH_QUALITY
-            );
-            setrecording(recording);
-        } catch (error) {
-            Alert.alert("Failed to start recording");
-        }
-    };
+    //         const { recording } = await Audio.Recording.createAsync(
+    //             Audio.RecordingOptionsPresets.HIGH_QUALITY
+    //         );
+    //         setrecording(recording);
+    //     } catch (error) {
+    //         Alert.alert("Failed to start recording");
+    //     }
+    // };
 
-    // stop recording
-    const stopRecording = async () => {
-        try {
-            await recording.stopAndUnloadAsync();
-            const uri = recording.getURI();
-            console.log('Recording saved to', uri);
-            setrecording(null);
+    // // stop recording
+    // const stopRecording = async () => {
+    //     try {
+    //         await recording.stopAndUnloadAsync();
+    //         const uri = recording.getURI();
+    //         console.log('Recording saved to', uri);
+    //         setrecording(null);
 
-            // Pass the URI to uploadAndTranscribe
-            uploadAndTranscribe(uri);
-        } catch (error) {
-            Alert.alert("Failed to stop recording");
-        }
-    };
+    //         // Pass the URI to uploadAndTranscribe
+    //         uploadAndTranscribe(uri);
+    //     } catch (error) {
+    //         Alert.alert("Failed to stop recording");
+    //     }
+    // };
 
-    // upload to server
-    const uploadAndTranscribe = async (uri) => {
-        setloading(true);
-        const API_KEY = EXPO_OPENAPI_KEY;
-        const formData = new FormData();
-        formData.append('file', {
-            uri,
-            name: 'audio.m4a',
-            type: 'audio/m4a',
-        });
-        formData.append('model', 'whisper-1');
+    // // upload to server
+    // const uploadAndTranscribe = async (uri) => {
+    //     setloading(true);
+    //     const API_KEY = EXPO_OPENAPI_KEY;
+    //     const formData = new FormData();
+    //     formData.append('file', {
+    //         uri,
+    //         name: 'audio.m4a',
+    //         type: 'audio/m4a',
+    //     });
+    //     formData.append('model', 'whisper-1');
 
-        try {
-            const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${API_KEY}`,
-                    // ❌ DO NOT manually set 'Content-Type'
-                },
-                body: formData,
-            });
+    //     try {
+    //         const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Authorization': `Bearer ${API_KEY}`,
+    //                 // ❌ DO NOT manually set 'Content-Type'
+    //             },
+    //             body: formData,
+    //         });
 
-            const result = await response.json();
-            console.log('Transcript:', result);
-            setInput(result.text);
-        } catch (error) {
-            console.error('Error uploading and transcribing audio:', error);
-            Alert.alert("Failed to transcribe audio");
-        } finally {
-            setloading(false);
-        }
-    };
+    //         const result = await response.json();
+    //         console.log('Transcript:', result);
+    //         setInput(result.text);
+    //     } catch (error) {
+    //         console.error('Error uploading and transcribing audio:', error);
+    //         Alert.alert("Failed to transcribe audio");
+    //     } finally {
+    //         setloading(false);
+    //     }
+    // };
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -242,7 +242,7 @@ export default function Chatbot() {
                     <Ionicons name='arrow-back' size={30} color='black' />
                 </TouchableOpacity>
                 <Image
-                    source={require('../../assets/images/robot.png')} // Update the path to your image
+                    source={require('../../assets/images/robot.jpg')} // Update the path to your image
                     style={styles.iconImage}
                 />
                 <Text style={styles.headerText}>Ela-AI</Text>

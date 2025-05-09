@@ -72,7 +72,7 @@ export default function TabLayout() {
                 onPress={() => router.push("/chatbot")}
             >
                 <Image
-                    source={require('../../assets/images/robot.png')} // Update the path to your image
+                    source={require('../../assets/images/robot.jpg')} // Update the path to your image
                     style={styles.iconImage}
                 />
             </TouchableOpacity>

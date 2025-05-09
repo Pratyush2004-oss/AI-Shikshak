@@ -3,7 +3,7 @@ import {
     GoogleGenerativeAI
 } from "@google/generative-ai";
 
-const apiKey = EXPO_PUBLIC_GIMINI_API_KEY;
+const apiKey = "AIzaSyDZ6wr0LUBofm7LvhZHvLald_XucayfFiA";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
