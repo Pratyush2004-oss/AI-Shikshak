@@ -29,7 +29,7 @@ export default function courseView() {
             ListHeaderComponent={
                 <View style={styles.container}>
                     <Intro course={course} enroll={enroll} />
-                    <ChapterSection course={course} />
+                    <ChapterSection course={course} enroll={enroll} />
                 </View>
             }
         />

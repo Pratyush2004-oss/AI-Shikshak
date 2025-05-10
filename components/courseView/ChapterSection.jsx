@@ -4,7 +4,7 @@ import { Colors } from '../../constant/Colors'
 import ChapterCard from './ChapterCard'
 import { useRouter } from 'expo-router'
 
-export default function ChapterSection({ course }) {
+export default function ChapterSection({ course, enroll }) {
     const router = useRouter();
     return (
         <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function ChapterSection({ course }) {
             <FlatList
                 data={course.chapters}
                 renderItem={({ item, index }) => (
-                    <ChapterCard chapter={item} index={index + 1} docId={course.docId} completed={JSON.stringify(course.completedChapter)} />
+                    <ChapterCard chapter={item} index={index + 1} enroll={enroll} docId={course.docId} completed={JSON.stringify(course.completedChapter)} />
                 )}
             />
         </View>

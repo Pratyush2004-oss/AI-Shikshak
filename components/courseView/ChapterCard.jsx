@@ -4,7 +4,7 @@ import { Colors } from '../../constant/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router';
 
-export default function ChapterCard({ chapter, index, docId, completed }) {
+export default function ChapterCard({ chapter, index, docId, completed, enroll }) {
     const router = useRouter();
     const [completedChapter, setcompletedChapter] = useState([])
     useEffect(() => {
@@ -17,7 +17,7 @@ export default function ChapterCard({ chapter, index, docId, completed }) {
         return isCompleted ? true : false;
     }
     return (
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity disabled={enroll == "true"} onPress={() => {
             router.replace({
                 pathname: '/chapterView',
                 params: {
@@ -31,7 +31,7 @@ export default function ChapterCard({ chapter, index, docId, completed }) {
             <Text style={styles.title}>{index}.</Text>
             <Text style={styles.title} numberOfLines={1}>{chapter.chapterName}</Text>
 
-            <TouchableOpacity style={styles.btn} onPress={() => router.replace({
+            <TouchableOpacity style={styles.btn} disabled={enroll == "true"} onPress={() => router.replace({
                 pathname: '/chapterView',
                 params: {
                     chapterParams: JSON.stringify(chapter),
