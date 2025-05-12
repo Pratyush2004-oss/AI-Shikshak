@@ -34,13 +34,14 @@ export default function ChapterView() {
     }
 
     useEffect(() => {
+        console.log(runningAudio, pathname);
         if (runningAudio && pathname == '/chapterView') {
             TextToSpeech();
         }
         else {
             Speech.stop();
         }
-    }, [runningAudio]);
+    }, [runningAudio, pathname]);
     const OnChapterComplete = async () => {
         setloading(true);
         // Save Chapter Complete 
